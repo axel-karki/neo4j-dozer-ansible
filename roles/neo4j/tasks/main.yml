@@ -1,20 +1,35 @@
-- name: Install Neo4j dependencies
+- name: Install dependencies
   apt:
     name:
-      - wget
       - curl
-      - nano
-      - software-properties-common
-      - dirmngr
-      - apt-transport-https
-      - gnupg
-      - gnupg2
-      - ca-certificates
-      - lsb-release
-      - ubuntu-keyring
+      - wget
       - unzip
+      - gnupg
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - lsb-release
     state: present
     update_cache: yes
+
+- name: Add Adoptium GPG key
+  ansible.builtin.apt_key:
+    url: https://packages.adoptium.net/artifactory/api/gpg/key/public
+    state: present
+
+- name: Add Adoptium APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://packages.adoptium.net/artifactory/deb bookworm main"
+    state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install Java 21 JDK
+  ansible.builtin.apt:
+    name: temurin-21-jdk
+    state: present
 
 - name: Add Neo4j GPG key
   shell: |
