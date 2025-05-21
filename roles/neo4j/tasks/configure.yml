@@ -5,12 +5,15 @@
     mode: '0644'
   notify: Restart Neo4j
 
-- name: Change neo4j default password
+- name: Wait for Neo4j to be fully operational
+  wait_for:
+    port: 7687
+    timeout: 30
+
+- name: Change Neo4j default password
   shell: |
-    cypher-shell -u neo4j -p neo4j "ALTER CURRENT USER SET PASSWORD FROM 'neo4j' TO '{{ neo4j_password }}';"
+    echo 'ALTER CURRENT USER SET PASSWORD FROM "neo4j" TO "{{ neo4j_password }}";' | cypher-shell -u neo4j -p neo4j --format plain --database system
   environment:
     NEO4J_AUTH: neo4j/neo4j
   args:
     executable: /bin/bash
-  ignore_errors: yes  # If password is already changed, this avoids failure
-
