@@ -1,0 +1,4 @@
+- name: Restart neo4j
+  ansible.builtin.service:
+    name: neo4j
+    state: restarted
