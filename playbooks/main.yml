@@ -1,0 +1,5 @@
+- name: Install and configure Neo4j with Dozer
+  hosts: neo4j
+  become: yes
+  roles:
+    - neo4j

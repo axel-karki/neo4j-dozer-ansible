@@ -1,0 +1,46 @@
+- name: Install Neo4j dependencies
+  apt:
+    name:
+      - wget
+      - curl
+      - nano
+      - software-properties-common
+      - dirmngr
+      - apt-transport-https
+      - gnupg
+      - gnupg2
+      - ca-certificates
+      - lsb-release
+      - ubuntu-keyring
+      - unzip
+    state: present
+    update_cache: yes
+
+- name: Add Neo4j GPG key
+  shell: |
+    curl -fsSL https://debian.neo4j.com/neotechnology.gpg.key | gpg --dearmor -o /usr/share/keyrings/neo4j.gpg
+  args:
+    creates: /usr/share/keyrings/neo4j.gpg
+
+- name: Add Neo4j APT repository
+  copy:
+    dest: /etc/apt/sources.list.d/neo4j.list
+    content: |
+      deb [signed-by=/usr/share/keyrings/neo4j.gpg] https://debian.neo4j.com stable latest
+
+- name: Update apt cache after adding Neo4j repo
+  apt:
+    update_cache: yes
+
+- name: Install Neo4j
+  apt:
+    name: neo4j
+    state: present
+
+- name: Enable and start Neo4j service
+  systemd:
+    name: neo4j
+    enabled: yes
+    state: started
+
+- include_tasks: configure.yml

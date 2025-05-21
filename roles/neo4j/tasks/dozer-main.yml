@@ -1,0 +1,31 @@
+- name: Install Dozer (binary)
+  get_url:
+    url: https://github.com/getdozer/dozer/releases/latest/download/dozer-linux-amd64
+    dest: /usr/local/bin/dozer
+    mode: '0755'
+
+- name: Copy Dozer config
+  copy:
+    src: dozer-config.yaml
+    dest: /etc/dozer/config.yaml
+
+- name: Enable Dozer systemd service
+  copy:
+    dest: /etc/systemd/system/dozer.service
+    content: |
+      [Unit]
+      Description=DozerDB Service
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/local/bin/dozer --config /etc/dozer/config.yaml
+      Restart=always
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Start Dozer
+  systemd:
+    name: dozer
+    enabled: yes
+    state: started

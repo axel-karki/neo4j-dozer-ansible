@@ -1,0 +1,23 @@
+# Example Dozer config
+sources:
+  - name: pg_source
+    config:
+      type: postgres
+      user: user
+      password: pass
+      database: mydb
+      host: localhost
+
+sinks:
+  - name: neo4j_sink
+    config:
+      type: http
+      url: http://localhost:7474
+      user: neo4j
+      password: ChangeThisToASecurePassword
+
+pipelines:
+  - name: sync_users
+    source: pg_source
+    sink: neo4j_sink
+    table: users
