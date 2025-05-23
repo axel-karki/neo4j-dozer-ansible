@@ -1,7 +1,0 @@
-- name: Install and configure Dozer
-  hosts: neo4j
-  become: yes
-  tasks:
-    - import_role:
-        name: neo4j
-        tasks_from: dozer-main
