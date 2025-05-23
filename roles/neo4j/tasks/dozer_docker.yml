@@ -86,15 +86,21 @@
   ansible.builtin.debug:
     msg: "Docker installed successfully: {{ docker_version.stdout }}"
 
-- name: Run Neo4j Docker container with DozerDB if not already running
+- name: Check if Neo4j container is running
+  shell: docker ps --format '{{"{{"}}.Names{{"}}"}}' | grep -w neo4j
+  register: neo4j_running
+  ignore_errors: true # avoids stopping the play if grep fails (expected when the container is not running).
+
+- name: Run Neo4j Docker container with DozerDB if not already running (detached mode added)
   ansible.builtin.shell: |
     docker run \
+            -d \
             -p7474:7474 -p7687:7687 \
             -v $HOME/neo4j/data:/data \
             -v $HOME/neo4j/logs:/logs \
             -v $HOME/neo4j/import:/var/lib/neo4j/import \
             -v $HOME/neo4j/plugins:/plugins \
-            --env NEO4J_AUTH=neo4j/password \
+            --env NEO4J_AUTH=neo4j/"{{ neo4j_password }}" \
             --env NEO4J_PLUGINS='["apoc"]' \
             --env NEO4J_apoc_export_file_enabled=true \
             --env NEO4J_apoc_import_file_enabled=true \
@@ -102,8 +108,4 @@
             graphstack/dozerdb:5.26.3.0
   args:
     executable: /bin/bash
-  when: >
-    "'neo4j' not in ansible_facts.docker_containers | map(attribute='Names') | flatten"
-  register: neo4j_container_result
-  changed_when: neo4j_container_result.rc == 0
-  
+  when: neo4j_running.rc != 0
