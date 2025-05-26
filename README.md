@@ -23,8 +23,8 @@ You have two playbooks depending on whether or not you want to use DozerDB.
 * Installs the official Neo4j Community Edition using Docker.
 * Configures port mappings, data directories, and credentials.
 
-<img width="917" alt="Screenshot 2025-05-26 at 6 06 31 AM" src="https://github.com/user-attachments/assets/f74f3659-9ad3-42ec-93e5-6f49e284bf7d" />
-<img width="917" alt="Screenshot 2025-05-26 at 6 07 12 AM" src="https://github.com/user-attachments/assets/150df79f-f035-43a9-b48a-3da6f9788425" />
+<img width="717" alt="Screenshot 2025-05-26 at 6 06 31 AM" src="https://github.com/user-attachments/assets/f74f3659-9ad3-42ec-93e5-6f49e284bf7d" />
+<img width="717" alt="Screenshot 2025-05-26 at 6 07 12 AM" src="https://github.com/user-attachments/assets/150df79f-f035-43a9-b48a-3da6f9788425" />
 
 ---
 
@@ -41,11 +41,16 @@ root@debian:~# lsof -i :7687
 COMMAND   PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
 java    10447 neo4j  373u  IPv6  45311      0t0  TCP *:7687 (LISTEN)
 ```
-<img width="918" alt="Screenshot 2025-05-26 at 6 07 45 AM" src="https://github.com/user-attachments/assets/868b2ce7-ce57-441c-9cc6-c0b460cf329b" />
+<img width="718" alt="Screenshot 2025-05-26 at 6 07 45 AM" src="https://github.com/user-attachments/assets/868b2ce7-ce57-441c-9cc6-c0b460cf329b" />
 
 ---
 
 ## Configuration
+
+To run the VM UI:
+```bash
+ssh -i <ssh_file_path> -L 7687:<vm_private_ip>:7687 -L 7474:<vm_private_ip>:7474 root@<server_public_ip>
+```
 
 To configure the Neo4j admin credentials, edit the file:
 
